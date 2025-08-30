@@ -1,0 +1,230 @@
+[
+  {
+    "content": "We are building a privacy-first, geo-based livestreaming platform for a passionate, underserved niche audience. The platform allows contributors to livestream from real-world events, with features like town-level location sharing by default for privacy, real-time map discovery of live streams, and a vault/marketplace for past streams to be archived and licensed. This creates a long-tail earning potential for creators and a dedicated space for a specific type of visually compelling content that is currently fragmented across general platforms.\n\nThe business founder has a fully developed concept, including market positioning, monetization strategy (tiered subscriptions, licensing commissions, brand sponsorships), and core features. We are seeking a technical cofounder to lead the technical architecture and development of the MVP. The ideal partner would have experience in live streaming tech (WebRTC, RTMP), geolocation/mapping APIs, and marketplace platforms. This is an opportunity to get in on the ground floor of a startup with a first-mover advantage in a niche with high potential for virality and global expansion.",
+    "date": "2025-08-30",
+    "title": "Privacy-Focused Geo-Livestreaming Platform",
+    "url": "https://www.reddit.com/r/cofounder/comments/1movt9y/usamabiz10_seeking_technical_cofounder_for/"
+  },
+  {
+    "content": "We have developed a fully-built, live SaaS platform designed for independent professionals like business coaches, freelancers, and small teams to manage both work and life in a single, consolidated system. The platform includes project and task management, scheduling, time tracking, invoicing, reporting, collaboration tools, and more. It is designed to be practical and easy to use, providing structure and control without the steep learning curve of complex enterprise platforms. The technical work is complete, and the platform is ready for marketing, growth, and user acquisition.\n\nWe are looking for a marketing cofounder to take full responsibility for growth, including positioning, messaging, acquisition strategy, and execution. This is a hands-on role for someone with experience in growing SaaS or digital products, who is interested in an equity-based partnership with revenue sharing options. The ideal partner will be an independent, execution-focused individual who wants to build a sustainable business from a solid foundation.",
+    "date": "2025-08-29",
+    "title": "Fully Built Productivity System for Independent Professionals",
+    "url": "https://www.reddit.com/r/cofounder/comments/1m3ow0t/austech15_seeking_cofounder_for_fully_built/"
+  },
+  {
+    "content": "We are creating a modern, beautifully-designed directory of unique saunas around the world, targeting travelers, locals, and wellness seekers. The platform will feature compelling sauna experiences embedded in culture, community, and design, such as forest retreats in Finland and rooftop clubs in Lisbon. Currently, there is no good product to discover and save these experiences, with users relying on a combination of Google Maps, TripAdvisor, and social media. Our platform will fill this gap with a curated, visually-appealing discovery layer that will evolve into a software-enabled marketplace with tools for operators to manage visibility, communication, and bookings.\n\nThe prototype is already built and ready for launch, with a focus on a curated set of listings in Europe and the U.S. We are seeking a go-to-market cofounder with experience in hospitality, wellness, or travel tech to lead business development, distribution strategy, and brand messaging. This is an opportunity to co-create a product in a large and underserved niche with a passionate community and a clear path to monetization.",
+    "date": "2025-08-26",
+    "title": "Curated Directory and Marketplace for Unique Saunas",
+    "url": "https://www.reddit.com/r/cofounder/comments/1m0wycu/usatech10_seeking_gtm_cofounder_with_a_focus_on/"
+  },
+  {
+    "title": "Vocablii: Learn Languages from YouTube Videos",
+    "url": "https://www.reddit.com/r/SaaS/comments/1n3wdjq/built_a_thing_people_say_they_want_it_no_one_is/",
+    "content": "Introducing Vocablii, the revolutionary language-learning tool that transforms YouTube videos into interactive lessons. Simply paste a YouTube URL, and Vocablii will extract the vocabulary, create flashcards, and provide an interactive transcript. Say goodbye to boring, out-of-context lessons and hello to real-world, contextual learning. It's the app you never knew you needed for mastering a new language.",
+    "date": "2025-08-29"
+  },
+  {
+    "title": "MCP-Cloud: Your Multi-Cloud Management Solution",
+    "url": "https://www.reddit.com/r/SaaS/comments/1n3ylwb/seeken_help_to_validate_business_ide_and_mvp/",
+    "content": "Manage your multi-cloud environment with ease using MCP-Cloud. This MVP offers a streamlined way to handle multiple cloud services from a single dashboard. We are currently seeking feedback to help shape the future of this innovative platform. Visit our website and try the app to experience the future of cloud management.",
+    "date": "2025-08-29"
+  },
+  {
+    "title": "PDFWizard: The Ultimate PDF Toolkit",
+    "url": "https://www.reddit.com/r/SaaS/comments/1n3yhvr/so_i_made_this_pdf_tools_website_please_tell_if_i/",
+    "content": "Unlock the power of PDF manipulation with PDFWizard. This project aims to be a comprehensive suite of tools for all your PDF needs. Currently, the splitting tool is live and ready for you to try. We are seeking user feedback to determine the future direction of this project. Is this a tool you would use? Let us know!",
+    "date": "2025-08-29"
+  },
+  {
+    "title": "Text Behind Image: Effortless Image Text Effects",
+    "url": "https://www.reddit.com/r/SaaS/comments/1n3wzwj/hey_i_am_launching_my_first_ever_app/",
+    "content": "Create stunning visuals with Text Behind Image, a free and easy-to-use tool that lets you place text behind objects in your photos. No installation required – it all works in your browser. This simple yet powerful app is perfect for creating eye-catching social media posts, ads, and more.",
+    "date": "2025-08-29"
+  },
+  {
+    "title": "AI-Powered Business Dashboard",
+    "url": "https://www.reddit.com/r/SaaS/comments/1n3yd4l/looking_for_feedback_on_my_draft_of_an_aipowered/",
+    "content": "Get a smarter overview of your business with our AI-powered dashboard. We are in the early stages of development and are looking for feedback on our concept and layout. This is your chance to help shape a tool that could revolutionize how you view your business data. Check out our draft and let us know what you think!",
+    "date": "2025-08-29"
+  },
+  {
+    "title": "NutriSnap: AI-Powered Nutrition Tracker",
+    "url": "https://www.reddit.com/r/SaaS/comments/1n3wyfx/just_launched_my_app_nutrisnap_looking_for_some/",
+    "content": "Tired of manually logging your meals? With NutriSnap, you can track your nutrition just by taking a photo of your food. Our AI analyzes the image and gives you a breakdown of calories, protein, carbs, and more. You can also scan barcodes, track your progress with charts, and get meal prep recipes. We are looking for testers to provide feedback on our early-stage app.",
+    "date": "2025-08-29"
+  },
+  {
+    "title": "Hackathon PPT Generator",
+    "url": "https://www.reddit.com/r/SaaS/comments/1n3w5ft/getting_the_imposter_syndrome/",
+    "content": "Generate winning hackathon presentations in seconds with our specialized PowerPoint generator. Unlike generic tools, our platform is focused on the needs of hackathon participants, creating slides with all the essential elements, including crucial flowcharts. Our MVP is live with no sign-up required, so you can try it out and give us your valuable feedback.",
+    "date": "2025-08-29"
+  },
+  {
+    "title": "AI Cold Email Generator",
+    "url": "https://www.reddit.com/r/SaaS/comments/1n3vx56/increase_your_reply_rate_7x/",
+    "content": "Supercharge your outreach with our new AI that generates highly effective cold emails and outreach messages in a flash. We are offering 25 free credits to anyone willing to test our side project and provide feedback. If you're involved in client outreach, this is a tool you won't want to miss.",
+    "date": "2025-08-29"
+  },
+  {
+    "title": "Contently.bot: Turn News into Social Posts",
+    "url": "https://www.reddit.com/r/SaaS/comments/1n3wssb/just_launched_my_first_project_turn_news_into/",
+    "content": "Effortlessly create engaging social media content with Contently.bot. This webapp monitors the latest news on your chosen topics and automatically drafts human-like tweets. Currently in its free beta phase, we are looking for users to test the service and provide feedback to help us improve.",
+    "date": "2025-08-29"
+  },
+  {
+    "title": "AI-Powered Personalized Business Plan Generator",
+    "url": "https://www.reddit.com/r/Businessideas/comments/1n3mq28/built_an_ai_business_consultant_testing_it_for/",
+    "content": "Are you an aspiring entrepreneur stuck on finding the right business idea? A new AI-powered tool is here to help. This innovative platform analyzes your unique skills, budget, and interests to generate personalized business ideas tailored just for you. No more generic suggestions that don't fit your profile. The AI delves into your personal attributes, including location and time availability, to produce three custom business concepts with high potential for success.\n\nOnce you've chosen an idea that resonates with you, the service doesn't stop there. It will generate a comprehensive, 5-page business plan to give you a clear roadmap. To ensure you're supported every step of the way, the platform also offers ongoing AI coaching to guide you through the launch process. The creator is currently seeking 10 serious individuals to test the tool for free and provide valuable feedback. This is a unique opportunity to get a head start on your entrepreneurial journey with a data-driven, personalized approach to business creation.",
+    "date": "2025-08-30"
+  },
+  {
+    "title": "All-in-One Business Services App",
+    "url": "https://www.reddit.com/r/Businessideas/comments/1n3jzfg/would_you_use_a_single_app_that_offers_250/",
+    "content": "Imagine a single application that consolidates over 250 business services, streamlining every aspect of your entrepreneurial journey. A new Dubai-based startup is developing a comprehensive platform to eliminate the hassle of dealing with multiple consultants and portals. This innovative app aims to be the ultimate one-stop-shop for entrepreneurs, making it easier than ever to start, run, and grow a business from anywhere in the world.\n\nThe app will be rolled out in three phases, starting with core setup services like company formation, licensing, visas, banking, and compliance. Subsequent phases will introduce an extensive range of services, from document attestation and legalization to website development and even fundraising support. The founder is currently seeking feedback on which services would be most valuable and whether entrepreneurs would trust an app to handle such critical tasks. This is your chance to help shape a tool that could revolutionize the way businesses are managed.",
+    "date": "2025-08-30"
+  },
+  {
+    "title": "ListerMate: eBay Listing Accelerator App",
+    "url": "https://www.reddit.com/r/Businessideas/comments/1n3b2y8/just_a_guy_who_built_this_app/",
+    "content": "For eBay sellers looking to streamline their workflow, a new app called ListerMate is here to help. Developed by a solo entrepreneur, this tool was initially created for personal use to speed up the tedious process of listing items on eBay. Now, it's available on the App Store for the wider seller community. ListerMate is designed to save you time and effort, allowing you to focus on what matters most: growing your business.\n\nThe creator, a one-person team with a passion for efficiency, is offering free credits with no credit card required for new users to try out the app. This is a great opportunity for eBay sellers to experience a tool built by someone who understands their pain points. Feedback is highly encouraged to help improve the app and tailor it to the needs of the community. If you're tired of spending hours on listings, give ListerMate a try and see how it can transform your selling process.",
+    "date": "2025-08-29"
+  },
+  {
+    "title": "SaaS Idea Validation and Management Tool",
+    "url": "https://www.reddit.com/r/Businessideas/comments/1n38rut/do_you_ever_get_random_saas_ideas_but_lose_them/",
+    "content": "For every entrepreneur who has a stream of brilliant SaaS ideas but struggles to keep track of them, a new tool is being developed to solve this exact problem. Many great concepts get lost in messy notes, forgotten over time, or are never validated due to a lack of time for research. This upcoming platform will allow you to quickly dump your ideas, either by typing or voice note, and instantly have them structured and analyzed.\n\nThe tool will break down your idea into key components like the problem, target audience, competitors, and potential. It will provide a quick 'gut-check' analysis to help you decide whether an idea is worth pursuing or should be shelved. While not a replacement for in-depth market research, it acts as a smart filter to prevent you from getting overwhelmed or letting a great idea slip away. An MVP has already been built, and the creator is looking for feedback from the community to refine it.",
+    "date": "2025-08-29"
+  },
+  {
+    "title": "Couptime: Social Coupon and Commission App",
+    "url": "https://www.reddit.com/r/Businessideas/comments/1n333h4/would_you_use_an_app_that_pays_you_when_your/",
+    "content": "A new app concept called **couptime** is looking to revolutionize the way we share and use food coupons. The idea is simple yet powerful: when you share a food coupon with a friend and they use it, you earn a commission from their order. This creates a mutually beneficial system where both you and your friend save money and earn a little extra on the side. It’s a unique blend of discounts and side income, all built on a foundation of trust and fairness among friends.\n\nThe project is currently in its early pilot phase, and the founder is seeking feedback to gauge interest and shape the app's development before its official launch. This is a great opportunity for a social-driven platform that turns everyday food orders into a rewarding experience for everyone involved. By participating in the initial survey, you can help determine if Couptime will become the next big thing in how we order food together.",
+    "date": "2025-08-29"
+  },
+  {
+    "title": "AI-First Full-Stack Dev Workspace",
+    "url": "https://www.reddit.com/r/startupideas/comments/1n3l5y3/would_you_use_an_aifirst_fullstack_dev_workspace/",
+    "content": "Introducing a revolutionary full-stack development platform designed to turn your ideas into reality at lightning speed. Simply describe your concept, and our AI will generate the complete frontend and backend structure for you. Edit code, preview your application live (including APIs), and deploy with a single click—all from within your browser. But we're taking it a step further. With our in-app AI plugin builder, you can seamlessly integrate powerful features like image classification, voice-to-text, and chatbots using a simple drag-and-drop interface. Have your own machine learning models? No problem. Our 'Bring Your Own Model' (BYOM) feature allows you to upload your models or link a HuggingFace Inference Endpoint, eliminating the need for complex MLOps or infrastructure setup. We're building the Figma of full-stack and AI development—a playground for developers to build real applications and integrate AI without the boilerplate. This is more than just another code generator; it's the future of app development.",
+    "date": "2025-08-29"
+  },
+  {
+    "title": "One-Stop App for Business Services",
+    "url": "https://www.reddit.com/r/startupideas/comments/1n3jya4/would_you_use_a_single_app_that_offers_250/",
+    "content": "Launching a new venture that consolidates over 250 business-related services into a single, user-friendly application. This Dubai-based platform is designed to simplify the entrepreneurial journey, eliminating the need to juggle multiple consultants and portals. The rollout is planned in three phases, starting with essential setup services like company formation, licensing, visas, and banking compliance. The subsequent phases will expand the service offerings to include everything from document attestation and legalization to website development and fundraising support. The goal is to cover every facet of starting, running, and growing a business, all from one convenient app. We are seeking feedback on which services would be most valuable to you and whether you would trust an app to handle these critical tasks, or if you would still prefer human interaction.",
+    "date": "2025-08-29"
+  },
+  {
+    "title": "Privacy-Focused, Local-First Accounting Software",
+    "url": "https://www.reddit.com/r/startupideas/comments/1n3hzbz/building_yet_another_accounting_software_bad_idea/",
+    "content": "In a world of cloud-based everything, we're bringing accounting back to your desktop with a focus on privacy, speed, and control. This is a local-first accounting software where your financial journals are stored in non-proprietary formats right on your machine. This means your data is private, the application is incredibly fast, and you have the freedom to back up and sync your files using your preferred services like Dropbox or Syncthing. The software supports double-entry bookkeeping, multiple currencies, and offers a custom chart and report builder. Designed to be keyboard-friendly, it runs on Windows, Linux, and Mac. For those who want the convenience of the cloud, an optional subscription provides cross-platform sync and automatic exchange rate updates. Future plans include mobile apps, a public API, invoicing, and payment processing features. If you're tired of the limitations and privacy concerns of existing accounting software, this is the solution you've been waiting for.",
+    "date": "2025-08-29"
+  },
+  {
+    "title": "SkyNav: Your Gamified Airport Companion",
+    "url": "https://www.reddit.com/r/startupideas/comments/1n3bgkx/anyone_else_feel_like_airports_are_way_too/",
+    "content": "Tired of the stress and confusion of navigating airports? Introducing SkyNav, a gamified mobile application designed to make your airport experience seamless and even enjoyable. Born out of the frustrating experiences of a chronic traveler, SkyNav is more than just a map. It provides walking times to your gate, shows you food and shopping options along your route (with filters for dietary needs like gluten-free and vegan), and helps you locate lounges. But SkyNav is also a community. Users can rate airport amenities, from WiFi quality to customer service, helping fellow travelers make better decisions. The goal is to transform the journey from the curb to the gate into a fun and stress-free part of your trip. We are currently seeking feedback on what features would be most valuable to you in a travel companion app like this.",
+    "date": "2025-08-29"
+  },
+  {
+    "title": "The Founder's Daily Micro-Task Companion",
+    "url": "https://www.reddit.com/r/startupideas/comments/1n3ehh3/building_an_app_that_gives_1_microtaskday_to_push/",
+    "content": "For the solo founder who feels the pressure of fading motivation and the lack of quick feedback, we're building a solution to keep you on track. This app delivers one small, manageable micro-task to your phone each day, designed to be completed in 10-30 minutes and tailored to help you move your project forward. Imagine tasks like 'draft a landing page headline' or 'conduct five 5-minute user calls.' The app is also a community where you can share your progress, get validation from peers through a quick voting system, and receive honest, actionable feedback. With light gamification elements like streaks and badges, we aim to make the entrepreneurial journey less lonely and more productive. We believe that peer-to-peer validation is the missing piece for many founders, and we're here to provide it.",
+    "date": "2025-08-29"
+  },
+  {
+    "title": "BigIdeasDB - All-in-one tool for entrepreneurs",
+    "url": "https://www.reddit.com/r/SideProject/comments/1n3rwg6/i_just_crossed_4500_this_month_and_it_feels_like/",
+    "content": "BigIdeasDB is a comprehensive platform designed to assist entrepreneurs in discovering, developing, and expanding their next successful product. It provides an integrated suite of tools that guide you from the initial idea phase through development and into management, including CRM and project management functionalities. This all-in-one solution aims to streamline the entrepreneurial journey, making it easier to navigate the complexities of building and growing a business.\n\nThe platform has already demonstrated significant traction, with 1,500 total signups and 35 paying users within a month of its launch. This early success, generating over $4,500 CAD in revenue, is a testament to the platform's value and the real-world problems it solves for entrepreneurs. The founder is actively developing new tools based on user feedback and partnering with agencies to help customers launch their products faster.",
+    "date": "2025-08-29"
+  },
+  {
+    "title": "Autonomous Lego Robot",
+    "url": "https://www.reddit.com/r/SideProject/comments/1n3wqnd/im_working_on_an_autonomous_robot_custom_made/",
+    "content": "This project showcases the creation of a custom-built autonomous robot using a combination of servos and Legos. The robot is in its developmental stages, with the creator actively working on its functionality. The project highlights a creative and accessible approach to robotics, demonstrating how everyday materials can be combined with electronics to build something innovative and functional.\n\nThe project is a great example of hands-on learning and experimentation in the fields of robotics and automation. By using readily available components like Legos, the creator is making robotics more approachable and inspiring for others who may be interested in building their own creations.",
+    "date": "2025-08-29"
+  },
+  {
+    "title": "Parsley.io - AI-powered job matching",
+    "url": "https://www.reddit.com/r/SideProject/comments/1n3wk7r/just_crossed_80_visitors_on_my_first_project/",
+    "content": "Parsley.io is an innovative platform that leverages AI to connect job seekers with relevant opportunities. Users can upload their resumes, and the AI-powered system analyzes their skills and experience to match them with suitable job openings. This streamlines the job search process, saving users time and effort in finding the right roles.\n\nThe platform has already gained traction, with over 80 visitors shortly after its launch. The creator is actively seeking to grow the user base and is focused on providing a valuable tool for those navigating the job market. By using AI, Parsley.io aims to make the job search more efficient and effective for everyone.",
+    "date": "2025-08-29"
+  },
+  {
+    "title": "Aviosa.fun - Ad-free AI role-playing website",
+    "url": "https://www.reddit.com/r/SideProject/comments/1n3cwrk/my_app_got_15k_users_in_2_weeks_and_im_proud_of/",
+    "content": "Aviosa.fun is a simple, user-friendly AI role-playing website created by a 15-year-old developer from Romania. The platform was born out of frustration with existing alternatives that were plagued by poor responses, intrusive ads, and aggressive subscription models. Aviosa.fun offers a clean, ad-free experience, allowing users to engage in AI-powered role-playing without interruptions.\n\nThe project has seen remarkable growth, attracting 1,500 users within just two weeks of its launch. This success was fueled by a positive reception on Reddit and a feature by a YouTuber. The platform operates entirely on donations, emphasizing its commitment to providing a free and enjoyable experience for all users.",
+    "date": "2025-08-29"
+  },
+  {
+    "title": "FoodieLens - Understand menus with a photo",
+    "url": "https://www.reddit.com/r/SideProject/comments/1n3wtua/built_this_app_because_i_could_never_understand/",
+    "content": "FoodieLens is a web app designed to demystify restaurant menus. By simply taking a photo of a menu, the app provides you with real images of the dishes, translates foreign menus, and even generates AI images if original photos are unavailable. It also links each dish to a quick Google search for more context and allows you to save menus for later.\n\nThe app was created to solve the common problem of encountering unfamiliar foodie jargon or foreign languages on menus. FoodieLens aims to make dining out a more enjoyable and less confusing experience. The app is free to start, with no credit card required, making it accessible to everyone.",
+    "date": "2025-08-29"
+  },
+  {
+    "title": "SocialKit - Developer-friendly social media APIs",
+    "url": "https://www.reddit.com/r/SideProject/comments/1n3w2we/just_hit_53_mrr_114_users_and_15_month_since/",
+    "content": "SocialKit is a collection of developer-focused APIs that provide access to social media data. The platform has recently launched a new YouTube Comments API and is continuously expanding its offerings. The creator is focused on providing value to developers and is actively creating blog posts, tutorials, and free tools to support the community.\n\nThe platform has achieved $53 MRR and has 114 users just 1.5 months after launch. The creator is transparent about the journey and is focused on sustainable growth through content marketing and community engagement. Future plans include adding pay-as-you-go pricing and creating competitor/alternatives pages to further increase visibility.",
+    "date": "2025-08-29"
+  },
+  {
+    "title": "Defrag98.com - Windows 98 Disk Defragmenter in your browser",
+    "url": "https://www.reddit.com/r/SideProject/comments/1n3yt7b/i_rebuilt_the_windows_98_disk_defragmenter_in/",
+    "content": "Defrag98.com is a nostalgic trip back to the 90s, offering a full browser simulation of the Windows 98 Disk Defragmenter. The project faithfully recreates the experience with colorful moving blocks, the hum of a hard drive, and the clicks of a mouse. While it doesn't actually speed up your computer, it provides a satisfying and relaxing experience for those who remember the original.\n\nThis project started as a fun weekend experiment and has evolved into a polished simulation that captures the essence of a bygone era of computing. It's a great example of a creative side project that brings joy and nostalgia to users. The creator is seeking feedback on the experience and is proud of what they have built.",
+    "date": "2025-08-29"
+  },
+  {
+    "title": "PDFWizard.pro - A suite of PDF tools",
+    "url": "https://www.reddit.com/r/SideProject/comments/1n3yilu/so_i_made_this_pdf_tools_website_please_tell_if_i/",
+    "content": "PDFWizard.pro is a new website that aims to provide a collection of tools for working with PDF files. The project is in its early stages, with the split tool being the first to be fully functional. The creator is seeking feedback from the community to determine if the project is worth continuing and to gather ideas for future development.\n\nThis is a great opportunity to get in on the ground floor of a new project and help shape its direction. If you've ever found yourself needing to manipulate PDF files, this is a project to watch. The creator is open to suggestions and is looking for validation that this is a tool that people will find useful.",
+    "date": "2025-08-29"
+  },
+  {
+    "title": "Vibe-Coding Course Platform",
+    "url": "https://www.reddit.com/r/SideProject/comments/1n3ik6s/my_very_first_income_from_sideproject_ever/",
+    "content": "This project is a newly launched platform for vibe-coding courses, with the first course titled \"Vibe-coding on steroids.\" The course covers essential topics such as IDE installation, GitHub basics, understanding errors, enhanced prompting for AI, and basic security best practices. The platform aims to provide practical and valuable knowledge for developers looking to improve their skills.\n\nThe creator recently celebrated their first sale, a significant milestone that has provided a huge boost in self-esteem. The platform was launched with minimal marketing, relying on a few \"build in public\" posts on X. This early success is a positive sign that the course content is resonating with the target audience.",
+    "date": "2025-08-29"
+  },
+  {
+    "title": "Motion Software - Screen recorder for Windows",
+    "url": "https://www.reddit.com/r/SideProject/comments/1n3vh09/motion_is_live_on_producthunt/",
+    "content": "Motion is an exclusive screen recorder for Windows that makes it incredibly easy to create beautiful screen recordings. The software includes features such as smart zoom-in and zoom-out animations, custom cursors, a custom video timeline, and the ability to edit backgrounds, padding, corners, and aspect ratio. It also boasts super-fast HD exports.\n\nAfter 1.5 years of development, Motion has finally launched on ProductHunt. The software is completely free, and the creator is seeking support and feedback from the community. Motion aims to provide a powerful yet user-friendly tool for anyone who needs to create high-quality screen recordings on Windows.",
+    "date": "2025-08-29"
+  },
+  {
+    "title": "PassTIA - CompTIA Exam Preparation",
+    "url": "https://www.reddit.com/r/SideProject/comments/1n3z6xj/if_the_product_is_good_people_will_pay_for_it/",
+    "content": "PassTIA is a platform designed to help individuals prepare for their CompTIA exams. The project was born out of the creator's own study journey and has since grown to attract subscribers from around the world. The platform's success is a testament to its quality and the real value it provides to users who are studying for their certifications.\n\nThe creator emphasizes the importance of building a product that solves a real problem and is grateful for the support the platform has received. They are motivated to continue improving PassTIA to provide the best possible experience for everyone preparing for their CompTIA exams.",
+    "date": "2025-08-29"
+  },
+  {
+    "title": "Skill-Swapping Platform",
+    "url": "https://www.reddit.com/r/SideProject/comments/1n3yxuz/would_you_use_a_platform_where_people_trade/",
+    "content": "This project is a platform that allows people to trade skills with each other for free. The idea is to connect individuals who want to learn a new skill with those who are proficient in it and are looking to learn something in return. For example, someone who knows how to code could teach someone who is fluent in Japanese, and in return, the Japanese speaker could teach the coder their language.\n\nThe platform aims to create a community of learners who can exchange knowledge without the need for expensive courses or tutors. The creator is currently seeking feedback on the idea to determine if it is a genuinely valuable concept that people would be interested in using.",
+    "date": "2025-08-29"
+  },
+  {
+    "title": "Vreaumester.ro - Romanian SaaS Platform",
+    "url": "https://www.reddit.com/r/SideProject/comments/1n3wkbd/my_saas_app_makes_0_mrr/",
+    "content": "Vreaumester.ro is a SaaS platform specifically designed for the Romanian market. The creator is currently in the process of figuring out the best way to promote the platform and is planning to experiment with paid social media ads to increase visibility and attract users. The project is a great example of the challenges that many entrepreneurs face when it comes to marketing and promotion.\n\nThe creator acknowledges that even a great product needs promotion to succeed and is determined to find a way to get the word out. They are encouraging other entrepreneurs to keep working hard on their dreams and to not give up, even when faced with challenges.",
+    "date": "2025-08-29"
+  },
+  {
+    "title": "AI-Powered Interview Prep Tool",
+    "url": "https://www.reddit.com/r/SideProject/comments/1n3vpbu/side_project_building_a_tool_to_help_people_prep/",
+    "content": "This side project is a tool designed to help people prepare for interviews. The tool will allow users to practice common interview questions with structure, understand what interviewers are looking for, and get feedback to improve their answers. A key feature will be the ability to do mock interviews with an AI coach, including voice-based interaction to help users get better at live delivery.\n\nThe project is in its early stages, and the creator is currently gathering feedback to identify the most helpful features. The goal is to create a tool that makes interview prep less painful and more effective. If you have recently interviewed for a job or are currently preparing for one, the creator would love to hear about your experience and what would have made the process easier.",
+    "date": "2025-08-29"
+  },
+  {
+    "title": "NutriSnap - AI-powered nutrition tracker",
+    "url": "https://www.reddit.com/r/SideProject/comments/1n3wxy5/just_launched_my_app_nutrisnap_looking_for_some/",
+    "content": "NutriSnap is an AI-powered nutrition tracker that simplifies the process of logging your meals. Instead of manually entering everything, you can simply take a picture of your food, and the app will provide you with the calorie count, protein, carbs, and other nutritional information. The app also includes a barcode scanner for packaged foods.\n\nIn addition to its core features, NutriSnap also offers progress tracking with charts and a collection of meal prep recipes. The app is still in its early stages, and the creator is looking for testers to provide honest feedback. If you are into health and fitness or just want to try out a new AI app, NutriSnap is available for testing now.",
+    "date": "2025-08-29"
+  },
+  {
+    "title": "Didascal - AI News Bots",
+    "url": "https://www.reddit.com/r/SideProject/comments/1n3wsjy/ai_news_bots/",
+    "content": "Didascal is a tool that allows you to create AI-powered news bots on any given topic. You can use it to generate a personalized news feed and share your bots with others. The creator personally uses it to follow stock companies and news from the AI world.\n\nThe tool is simple to use and provides a unique way to stay informed about the topics that matter most to you. Whether you're interested in technology, finance, or any other niche, Didascal can help you create a customized news experience.",
+    "date": "2025-08-29"
+  }
+]
