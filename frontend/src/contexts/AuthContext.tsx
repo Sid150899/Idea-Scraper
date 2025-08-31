@@ -31,6 +31,35 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   // Function to create user in custom User table
   const createUserInCustomTable = async (authUser: any, firstName: string, lastName: string) => {
     try {
+      // First, let's check if the User table exists and what its structure is
+      console.log('Checking User table structure...')
+      try {
+        const { data: tableInfo, error: tableError } = await supabase
+          .from('User')
+          .select('*')
+          .limit(1)
+        
+        if (tableError) {
+          console.error('Error accessing User table:', tableError)
+          // Try with lowercase 'user' as fallback
+          const { data: lowerTableInfo, error: lowerTableError } = await supabase
+            .from('user')
+            .select('*')
+            .limit(1)
+          
+          if (lowerTableError) {
+            console.error('Error accessing user table (lowercase):', lowerTableError)
+            return null
+          } else {
+            console.log('Found user table (lowercase)')
+          }
+        } else {
+          console.log('Found User table (uppercase)')
+        }
+      } catch (tableCheckError) {
+        console.error('Error checking table structure:', tableCheckError)
+      }
+      
       // Generate a unique integer user_id using timestamp and random component
       let user_id: number
       let attempts = 0
@@ -84,6 +113,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setTimeout(() => reject(new Error('Database timeout')), 5000)
       })
       
+      console.log('Attempting to insert user data:', userData)
+      
       const insertPromise = supabase
         .from('User')
         .insert([userData])
@@ -94,6 +125,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       if (error) {
         console.error('Error creating user in custom table:', error)
+        console.error('Error details:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code
+        })
         return null
       }
 
@@ -302,15 +339,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         })
 
         try {
+          console.log('Creating user in custom table...')
           const customUser = await Promise.race([
             createUserInCustomTable(data.user, firstName, lastName),
             userCreationTimeout
           ])
           
           if (!customUser) {
+            console.error('createUserInCustomTable returned null')
             return { error: 'Failed to create user profile. Please try again.' }
           }
+          
+          console.log('User created successfully in custom table:', customUser)
         } catch (creationError: any) {
+          console.error('Error during user creation:', creationError)
           if (creationError?.message === 'User creation timeout') {
             console.warn('User creation took too long, continuing with basic auth')
             // Continue with basic auth even if user creation times out
