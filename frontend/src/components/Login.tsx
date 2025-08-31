@@ -19,21 +19,33 @@ const Login: React.FC = () => {
     e.preventDefault()
     setError('')
     setLoading(true)
+    
+    const startTime = performance.now()
+    console.log('🚀 Login form submission started at:', new Date().toISOString())
 
     try {
       let result
       if (isLogin) {
+        console.log('🔐 Attempting login...')
         result = await login(email, password)
       } else {
+        console.log('📝 Attempting registration...')
         result = await register(firstName, lastName, email, password)
       }
 
+      const endTime = performance.now()
+      console.log(`⏱️ Form submission completed in ${(endTime - startTime).toFixed(2)}ms`)
+
       if (result.error) {
+        console.error('❌ Error result:', result.error)
         setError(result.error)
       } else {
+        console.log('✅ Success, navigating to home...')
         navigate('/')
       }
     } catch (err) {
+      const endTime = performance.now()
+      console.error(`❌ Unexpected error after ${(endTime - startTime).toFixed(2)}ms:`, err)
       setError('An unexpected error occurred')
     } finally {
       setLoading(false)
@@ -132,7 +144,11 @@ const Login: React.FC = () => {
           {loading && (
             <div className="loading-indicator">
               <div className="spinner"></div>
-              <span>Verifying credentials...</span>
+              <span>{isLogin ? 'Signing in...' : 'Creating account...'}</span>
+              <div className="loading-details">
+                <small>This may take a few seconds</small>
+                <small>Please don't close this page</small>
+              </div>
             </div>
           )}
         </form>

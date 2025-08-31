@@ -121,12 +121,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       if (userCache.has(email)) {
         const cachedUser = userCache.get(email)
         if (cachedUser) {
-          console.log('Using cached user for:', email)
+          console.log('✅ Using cached user for:', email)
           return cachedUser
         }
       }
 
-      // Fetch from database with timeout
+      console.log('🔍 Fetching user from database for:', email)
+      
+      // Fetch from database with reduced timeout
       const fetchPromise = supabase
         .from(USER_TABLE)
         .select('*')
@@ -140,19 +142,23 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const { data, error } = await Promise.race([fetchPromise, timeoutPromise])
 
       if (error) {
-        console.error('Error getting user from custom table:', error)
+        console.error('❌ Error getting user from custom table:', error)
         return null
       }
 
-      // Cache the user
-      setUserCache(prev => new Map(prev).set(email, data))
+      // Cache the user for future use
+      if (data) {
+        setUserCache(prev => new Map(prev).set(email, data))
+        console.log('✅ User cached for future use:', email)
+      }
+      
       return data
     } catch (error) {
-      console.error('Error getting user from custom table:', error)
+      console.error('❌ Error getting user from custom table:', error)
       
       // Handle timeout errors specifically
       if (error instanceof Error && error.message === 'Database timeout') {
-        console.error('Database fetch operation timed out. This might be due to:')
+        console.error('⚠️ Database fetch operation timed out. This might be due to:')
         console.error('1. Network connectivity issues')
         console.error('2. Supabase service being slow')
         console.error('3. Database being overloaded')
@@ -164,8 +170,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }
 
   // Constants for consistent configuration
-  const AUTH_TIMEOUT = 10000; // 10 seconds
-  const DB_TIMEOUT = 8000;    // 8 seconds
+  const AUTH_TIMEOUT = 5000; // Reduced from 10 seconds to 5 seconds
+  const DB_TIMEOUT = 3000;   // Reduced from 8 seconds to 3 seconds
   const USER_TABLE = 'User';  // Standardized table name
 
   // Function to handle authentication errors consistently
@@ -242,21 +248,25 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const checkUser = async () => {
       try {
         const timeoutPromise = new Promise<never>((_, reject) => {
-          setTimeout(() => reject(new Error('Session check timeout')), 3000) // Reduced to 3 seconds
+          setTimeout(() => reject(new Error('Session check timeout')), 2000) // Reduced to 2 seconds
         })
 
         const sessionPromise = supabase.auth.getSession()
         const { data: { session } } = await Promise.race([sessionPromise, timeoutPromise])
         
         if (session?.user) {
+          console.log('✅ Found existing session for:', session.user.email)
           // Get user from custom table with aggressive timeout
           const customUser = await getUserFromCustomTable(session.user.email || '')
           if (customUser) {
             setUser(customUser)
+            console.log('✅ User loaded from session')
           }
+        } else {
+          console.log('ℹ️ No existing session found')
         }
       } catch (error) {
-        console.error('Error checking user session:', error)
+        console.error('❌ Error checking user session:', error)
         // Continue with loading false even if session check fails
       } finally {
         setLoading(false)
@@ -268,11 +278,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     // Listen for auth changes with aggressive timeouts
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        console.log('🔄 Auth state change event:', event)
+        
         if (session?.user) {
-          // Quick cache check first
+          // Quick cache check first for immediate response
           if (userCache.has(session.user.email || '')) {
             const cachedUser = userCache.get(session.user.email || '')
             if (cachedUser) {
+              console.log('✅ Using cached user for immediate auth state change response')
               setUser(cachedUser)
               // Update last_login timestamp
               updateLastLogin(cachedUser.user_id)
@@ -281,12 +294,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             }
           }
           
-                   // Fallback to database fetch with timeout
-         try {
-           const fetchTimeout = new Promise<never>((_, reject) => {
-             setTimeout(() => reject(new Error('User fetch timeout')), DB_TIMEOUT)
-           })
-            
+          // Fallback to database fetch with timeout
+          try {
+            const fetchTimeout = new Promise<never>((_, reject) => {
+              setTimeout(() => reject(new Error('User fetch timeout')), DB_TIMEOUT)
+            })
+             
             const fetchPromise = getUserFromCustomTable(session.user.email || '')
             const customUser = await Promise.race([fetchPromise, fetchTimeout])
             
@@ -294,12 +307,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
               setUser(customUser)
               // Update last_login timestamp
               updateLastLogin(customUser.user_id)
+              console.log('✅ User loaded from database for auth state change')
             }
           } catch (fetchError) {
-            console.error('User fetch timeout, continuing without user data')
+            console.error('⚠️ User fetch timeout, continuing without user data')
             // Continue without user data if fetch times out
           }
         } else {
+          console.log('ℹ️ No session, clearing user')
           setUser(null)
         }
         setLoading(false)
@@ -310,6 +325,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, [userCache]) // Added userCache dependency
 
   const login = async (email: string, password: string) => {
+    const startTime = performance.now()
+    console.log('🚀 Login process started at:', new Date().toISOString())
+    
     try {
       console.log('Attempting login for email:', email)
       
@@ -318,6 +336,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setTimeout(() => reject(new Error('Authentication timeout')), AUTH_TIMEOUT)
       })
 
+      const authStartTime = performance.now()
       const authPromise = supabase.auth.signInWithPassword({
         email,
         password,
@@ -325,6 +344,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       const result = await Promise.race([authPromise, timeoutPromise])
       const { error, data } = result
+      const authEndTime = performance.now()
+      console.log(`⏱️ Supabase Auth completed in ${(authEndTime - authStartTime).toFixed(2)}ms`)
 
       if (error) {
         console.error('Login error:', error)
@@ -345,8 +366,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       // Quick user setup after successful login with timeout
       try {
+        const userSetupStartTime = performance.now()
         const userSetupPromise = (async () => {
+          const sessionStartTime = performance.now()
           const { data: { session } } = await supabase.auth.getSession()
+          const sessionEndTime = performance.now()
+          console.log(`⏱️ Session fetch completed in ${(sessionEndTime - sessionStartTime).toFixed(2)}ms`)
+          
           if (session?.user) {
             console.log('Setting up user after successful login:', session.user.email)
             
@@ -354,43 +380,56 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             if (userCache.has(session.user.email || '')) {
               const cachedUser = userCache.get(session.user.email || '')
               if (cachedUser) {
-                console.log('Using cached user for immediate response')
+                console.log('✅ Using cached user for immediate response')
                 setUser(cachedUser)
                 updateLastLogin(cachedUser.user_id)
+                const userSetupEndTime = performance.now()
+                console.log(`⏱️ User setup with cache completed in ${(userSetupEndTime - userSetupStartTime).toFixed(2)}ms`)
                 return
               }
             }
             
             // Quick database check with timeout
-            console.log('Looking up custom user for email:', session.user.email)
+            console.log('🔍 Looking up custom user for email:', session.user.email)
+            const dbStartTime = performance.now()
             const customUser = await getUserFromCustomTable(session.user.email || '')
+            const dbEndTime = performance.now()
+            console.log(`⏱️ Database lookup completed in ${(dbEndTime - dbStartTime).toFixed(2)}ms`)
+            
             if (customUser) {
-              console.log('Found custom user:', customUser)
+              console.log('✅ Found custom user:', customUser)
               setUser(customUser)
               // Update last_login timestamp
               updateLastLogin(customUser.user_id)
             } else {
-              console.warn('No custom user found for authenticated email:', session.user.email)
+              console.warn('⚠️ No custom user found for authenticated email:', session.user.email)
               // Clear any stale cache for this email
               clearStaleCache(session.user.email)
             }
           }
         })()
 
-                 const userSetupTimeout = new Promise<never>((_, reject) => {
-           setTimeout(() => reject(new Error('User setup timeout')), DB_TIMEOUT)
-         })
+        const userSetupTimeout = new Promise<never>((_, reject) => {
+          setTimeout(() => reject(new Error('User setup timeout')), DB_TIMEOUT)
+        })
 
         await Promise.race([userSetupPromise, userSetupTimeout])
+        const userSetupEndTime = performance.now()
+        console.log(`⏱️ Total user setup completed in ${(userSetupEndTime - userSetupStartTime).toFixed(2)}ms`)
       } catch (setupError: any) {
         if (setupError?.message === 'User setup timeout') {
-          console.warn('User setup took too long, continuing with basic auth')
+          console.warn('⚠️ User setup took too long, continuing with basic auth')
           // Continue with basic authentication even if user setup times out
         }
       }
 
+      const totalEndTime = performance.now()
+      console.log(`🎉 Total login process completed in ${(totalEndTime - startTime).toFixed(2)}ms`)
       return { error: null }
     } catch (error: any) {
+      const totalEndTime = performance.now()
+      console.error(`❌ Login failed after ${(totalEndTime - startTime).toFixed(2)}ms:`, error)
+      
       if (error?.message === 'Authentication timeout') {
         return { error: 'Authentication is taking too long. Please try again.' }
       }
