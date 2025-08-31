@@ -4,9 +4,12 @@ import { supabase, User } from '../lib/supabase'
 interface AuthContextType {
   user: User | null
   login: (email: string, password: string) => Promise<{ error: string | null }>
-  register: (firstName: string, lastName: string, email: string, password: string) => Promise<{ error: string | null }>
+  register: (firstName: string, lastName: string, email: string, password: string) => Promise<{ error: string | null, success?: string }>
   logout: () => Promise<void>
   loading: boolean
+  clearStaleCache: (email?: string) => void
+  debugAuthState: (email: string) => Promise<{ session: boolean; customUser: boolean; cachedUser: boolean } | { error: string }>
+  checkSupabaseConfig: () => Promise<{ success: string } | { error: string }>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -35,90 +38,24 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       console.log('Checking User table structure...')
       try {
         const { data: tableInfo, error: tableError } = await supabase
-          .from('User')
+          .from(USER_TABLE)
           .select('*')
           .limit(1)
         
         if (tableError) {
           console.error('Error accessing User table:', tableError)
-          // Try with lowercase 'user' as fallback
-          const { data: lowerTableInfo, error: lowerTableError } = await supabase
-            .from('user')
-            .select('*')
-            .limit(1)
-          
-          if (lowerTableError) {
-            console.error('Error accessing user table (lowercase):', lowerTableError)
-            return null
-          } else {
-            console.log('Found user table (lowercase)')
-          }
+          return null
         } else {
-          console.log('Found User table (uppercase)')
+          console.log('Found User table')
         }
       } catch (tableCheckError) {
         console.error('Error checking table structure:', tableCheckError)
       }
       
-      // Generate a unique integer user_id using a smaller range
-      let user_id: number
-      let attempts = 0
-      const maxAttempts = 10
+      // Use the Supabase Auth user ID to maintain consistency
+      const user_id = authUser.id
       
-      do {
-        // Use a smaller range: current timestamp in seconds + random number
-        const timestampSeconds = Math.floor(Date.now() / 1000) // Convert to seconds
-        const random = Math.floor(Math.random() * 10000) // Random 0-9999
-        user_id = timestampSeconds + random
-        
-        // Ensure user_id is within PostgreSQL integer range (max: 2,147,483,647)
-        if (user_id > 2147483647) {
-          user_id = user_id % 2147483647 // Wrap around if too large
-        }
-        
-        attempts++
-        
-        // Check if user_id already exists (with timeout)
-        const timeoutPromise = new Promise<never>((_, reject) => {
-          setTimeout(() => reject(new Error('Timeout')), 3000)
-        })
-        
-        let checkPromise = supabase
-          .from('User')
-          .select('user_id')
-          .eq('user_id', user_id)
-          .single()
-
-        try {
-          const { data: existingUser } = await Promise.race([checkPromise, timeoutPromise])
-          if (!existingUser) break
-        } catch (error) {
-          // If User table fails, try user table
-          if (error && typeof error === 'object' && 'message' in error && 
-              typeof (error as any).message === 'string' && 
-              (error as any).message.includes('relation') && (error as any).message.includes('User')) {
-            console.log('Trying user ID check with lowercase table...')
-            checkPromise = supabase
-              .from('user')
-              .select('user_id')
-              .eq('user_id', user_id)
-              .single()
-            
-            const { data: existingUserLower } = await Promise.race([checkPromise, timeoutPromise])
-            if (!existingUserLower) break
-          } else {
-            // If timeout or other error, assume user_id is available
-            break
-          }
-        }
-      } while (attempts < maxAttempts)
-      
-      if (attempts >= maxAttempts) {
-        console.error('Failed to generate unique user_id after multiple attempts')
-        return null
-      }
-      
-      console.log('Generated user_id:', user_id, 'Type:', typeof user_id, 'Range check:', user_id <= 2147483647)
+      console.log('Using Supabase Auth user_id:', user_id, 'Type:', typeof user_id)
       
       const userData = {
         user_id: user_id,
@@ -132,35 +69,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         updated_at: new Date().toISOString()
       }
 
-      // Insert into custom User table with timeout
-      const timeoutPromise = new Promise<never>((_, reject) => {
-        setTimeout(() => reject(new Error('Database timeout')), 5000)
-      })
-      
       console.log('Attempting to insert user data:', userData)
       
-      // Try with uppercase 'User' first, then lowercase 'user' as fallback
-      let insertPromise = supabase
-        .from('User')
+      // Insert using standardized table name with timeout
+      const insertPromise = supabase
+        .from(USER_TABLE)
         .insert([userData])
         .select()
         .single()
 
-      let { data, error } = await Promise.race([insertPromise, timeoutPromise])
+      const timeoutPromise = new Promise<never>((_, reject) => {
+        setTimeout(() => reject(new Error('Database timeout')), DB_TIMEOUT)
+      })
 
-      // If uppercase fails, try lowercase
-      if (error && error.message.includes('relation') && error.message.includes('User')) {
-        console.log('Trying with lowercase table name...')
-        insertPromise = supabase
-          .from('user')
-          .insert([userData])
-          .select()
-          .single()
-
-        const result = await Promise.race([insertPromise, timeoutPromise])
-        data = result.data
-        error = result.error
-      }
+      const { data, error } = await Promise.race([insertPromise, timeoutPromise])
 
       if (error) {
         console.error('Error creating user in custom table:', error)
@@ -178,6 +100,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       return data
     } catch (error) {
       console.error('Error creating user in custom table:', error)
+      
+      // Handle timeout errors specifically
+      if (error instanceof Error && error.message === 'Database timeout') {
+        console.error('Database operation timed out. This might be due to:')
+        console.error('1. Network connectivity issues')
+        console.error('2. Supabase service being slow')
+        console.error('3. Database being overloaded')
+        console.error('4. Foreign key constraint issues (like the UUID vs integer problem)')
+      }
+      
       return null
     }
   }
@@ -185,21 +117,25 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   // Function to get user from custom User table with caching
   const getUserFromCustomTable = async (email: string) => {
     try {
-      // Check cache first
+      // Check cache first, but only if we have a valid user
       if (userCache.has(email)) {
-        return userCache.get(email) || null
+        const cachedUser = userCache.get(email)
+        if (cachedUser) {
+          console.log('Using cached user for:', email)
+          return cachedUser
+        }
       }
 
       // Fetch from database with timeout
-      const timeoutPromise = new Promise<never>((_, reject) => {
-        setTimeout(() => reject(new Error('Database timeout')), 3000)
-      })
-      
       const fetchPromise = supabase
-        .from('User')
+        .from(USER_TABLE)
         .select('*')
         .eq('email', email)
         .single()
+
+      const timeoutPromise = new Promise<never>((_, reject) => {
+        setTimeout(() => reject(new Error('Database timeout')), DB_TIMEOUT)
+      })
 
       const { data, error } = await Promise.race([fetchPromise, timeoutPromise])
 
@@ -213,7 +149,91 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       return data
     } catch (error) {
       console.error('Error getting user from custom table:', error)
+      
+      // Handle timeout errors specifically
+      if (error instanceof Error && error.message === 'Database timeout') {
+        console.error('Database fetch operation timed out. This might be due to:')
+        console.error('1. Network connectivity issues')
+        console.error('2. Supabase service being slow')
+        console.error('3. Database being overloaded')
+        console.error('4. Foreign key constraint issues (like the UUID vs integer problem)')
+      }
+      
       return null
+    }
+  }
+
+  // Constants for consistent configuration
+  const AUTH_TIMEOUT = 10000; // 10 seconds
+  const DB_TIMEOUT = 8000;    // 8 seconds
+  const USER_TABLE = 'User';  // Standardized table name
+
+  // Function to handle authentication errors consistently
+  const handleAuthError = (error: any, operation: string) => {
+    console.error(`Authentication error during ${operation}:`, error)
+    
+    // Check if the error indicates user already exists by email
+    if (error?.message?.toLowerCase().includes('already registered') ||
+        error?.message?.toLowerCase().includes('already exists') ||
+        error?.message?.toLowerCase().includes('already been registered') ||
+        error?.message?.toLowerCase().includes('user already exists') ||
+        error?.message?.toLowerCase().includes('email already in use') ||
+        error?.code === '23505' || // PostgreSQL unique constraint violation
+        error?.code === '23514' || // PostgreSQL check constraint violation
+        error?.status === 400) { // Bad request often means user exists
+      return 'User already exists, please login'
+    }
+    
+    return error?.message || 'An unexpected error occurred'
+  }
+
+  // Function to retry operations with exponential backoff
+  const retryOperation = async (
+    operation: () => Promise<any>, 
+    maxRetries: number = 3,
+    baseDelay: number = 1000
+  ): Promise<any> => {
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        return await operation()
+      } catch (error) {
+        if (attempt === maxRetries) {
+          throw error
+        }
+        
+        const delay = baseDelay * Math.pow(2, attempt - 1) // Exponential backoff
+        console.log(`Operation failed, retrying in ${delay}ms (attempt ${attempt}/${maxRetries})`)
+        await new Promise(resolve => setTimeout(resolve, delay))
+      }
+    }
+    throw new Error('Max retries exceeded')
+  }
+
+  // Function to update last_login timestamp in User table
+  const updateLastLogin = async (userId: number) => {
+    try {
+      console.log('Updating last_login for user:', userId)
+      
+      const currentTimestamp = new Date().toISOString()
+      
+      // Update the last_login column using standardized table name
+      const { error } = await supabase
+        .from(USER_TABLE)
+        .update({ last_login: currentTimestamp })
+        .eq('user_id', userId)
+      
+      if (error) {
+        console.error('Error updating last_login in User table:', error)
+        // Don't fail the login if this update fails
+        return false
+      }
+      
+      console.log('Successfully updated last_login timestamp in User table')
+      return true
+    } catch (error) {
+      console.error('Error updating last_login:', error)
+      // Don't fail the login if this update fails
+      return false
     }
   }
 
@@ -254,22 +274,26 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             const cachedUser = userCache.get(session.user.email || '')
             if (cachedUser) {
               setUser(cachedUser)
+              // Update last_login timestamp
+              updateLastLogin(cachedUser.user_id)
               setLoading(false)
               return
             }
           }
           
-          // Fallback to database fetch with timeout
-          try {
-            const fetchTimeout = new Promise<never>((_, reject) => {
-              setTimeout(() => reject(new Error('User fetch timeout')), 3000) // 3 second timeout
-            })
+                   // Fallback to database fetch with timeout
+         try {
+           const fetchTimeout = new Promise<never>((_, reject) => {
+             setTimeout(() => reject(new Error('User fetch timeout')), DB_TIMEOUT)
+           })
             
             const fetchPromise = getUserFromCustomTable(session.user.email || '')
             const customUser = await Promise.race([fetchPromise, fetchTimeout])
             
             if (customUser) {
               setUser(customUser)
+              // Update last_login timestamp
+              updateLastLogin(customUser.user_id)
             }
           } catch (fetchError) {
             console.error('User fetch timeout, continuing without user data')
@@ -287,9 +311,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const login = async (email: string, password: string) => {
     try {
+      console.log('Attempting login for email:', email)
+      
       // Add timeout to prevent hanging
       const timeoutPromise = new Promise<never>((_, reject) => {
-        setTimeout(() => reject(new Error('Authentication timeout')), 5000) // Reduced to 5 seconds
+        setTimeout(() => reject(new Error('Authentication timeout')), AUTH_TIMEOUT)
       })
 
       const authPromise = supabase.auth.signInWithPassword({
@@ -298,10 +324,23 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       })
 
       const result = await Promise.race([authPromise, timeoutPromise])
-      const { error } = result
+      const { error, data } = result
 
       if (error) {
+        console.error('Login error:', error)
         return { error: error.message }
+      }
+
+      console.log('Supabase Auth login successful:', {
+        userId: data?.user?.id,
+        email: data?.user?.email,
+        confirmed: data?.user?.email_confirmed_at
+      })
+
+      // Check if user is confirmed (temporarily disabled for debugging)
+      if (data?.user && !data.user.email_confirmed_at) {
+        console.warn('User email not confirmed, but allowing login for debugging:', data.user.email)
+        // return { error: 'Please check your email and confirm your account before logging in.' }
       }
 
       // Quick user setup after successful login with timeout
@@ -309,26 +348,38 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         const userSetupPromise = (async () => {
           const { data: { session } } = await supabase.auth.getSession()
           if (session?.user) {
+            console.log('Setting up user after successful login:', session.user.email)
+            
             // Check cache first for immediate response
             if (userCache.has(session.user.email || '')) {
               const cachedUser = userCache.get(session.user.email || '')
               if (cachedUser) {
+                console.log('Using cached user for immediate response')
                 setUser(cachedUser)
+                updateLastLogin(cachedUser.user_id)
                 return
               }
             }
             
             // Quick database check with timeout
+            console.log('Looking up custom user for email:', session.user.email)
             const customUser = await getUserFromCustomTable(session.user.email || '')
             if (customUser) {
+              console.log('Found custom user:', customUser)
               setUser(customUser)
+              // Update last_login timestamp
+              updateLastLogin(customUser.user_id)
+            } else {
+              console.warn('No custom user found for authenticated email:', session.user.email)
+              // Clear any stale cache for this email
+              clearStaleCache(session.user.email)
             }
           }
         })()
 
-        const userSetupTimeout = new Promise<never>((_, reject) => {
-          setTimeout(() => reject(new Error('User setup timeout')), 3000) // 3 second timeout for user setup
-        })
+                 const userSetupTimeout = new Promise<never>((_, reject) => {
+           setTimeout(() => reject(new Error('User setup timeout')), DB_TIMEOUT)
+         })
 
         await Promise.race([userSetupPromise, userSetupTimeout])
       } catch (setupError: any) {
@@ -349,10 +400,23 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const register = async (firstName: string, lastName: string, email: string, password: string) => {
     try {
-      // Sign up with Supabase directly with timeout
-      const signupTimeout = new Promise<never>((_, reject) => {
-        setTimeout(() => reject(new Error('Signup timeout')), 5000) // 5 second timeout
+      console.log('=== REGISTRATION START ===')
+      console.log('Attempting registration for:', { firstName, lastName, email })
+      
+      // Clear any stale cache for this email first
+      setUserCache(prev => {
+        const newCache = new Map(prev)
+        newCache.delete(email)
+        return newCache
       })
+      
+      // Don't check custom table first - let Supabase Auth handle existing user detection
+      // This prevents false positives from stale cache or database state
+      
+                 // Sign up with Supabase directly with timeout
+           const signupTimeout = new Promise<never>((_, reject) => {
+             setTimeout(() => reject(new Error('Signup timeout')), AUTH_TIMEOUT)
+           })
 
       const signupPromise = supabase.auth.signUp({
         email,
@@ -368,14 +432,99 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const { data, error: signUpError } = await Promise.race([signupPromise, signupTimeout])
 
       if (signUpError) {
+        console.log('=== SIGNUP ERROR ANALYSIS ===')
+        console.log('Error Object:', signUpError)
+        console.log('Error Code:', signUpError.code)
+        console.log('Error Message:', signUpError.message)
+        console.log('Error Status:', signUpError.status)
+        
+        // Check the specific error type and handle accordingly
+        if (signUpError.code === 'email_address_invalid') {
+          console.log('Email address rejected by Supabase as invalid')
+          return { error: 'Email address format is not accepted. Please use a different email address.' }
+        }
+        
+        if (signUpError.code === 'user_already_exists' || 
+            signUpError.message?.toLowerCase().includes('already registered') || 
+            signUpError.message?.toLowerCase().includes('already exists') ||
+            signUpError.message?.toLowerCase().includes('already been registered') ||
+            signUpError.message?.toLowerCase().includes('user already exists') ||
+            signUpError.message?.toLowerCase().includes('email already in use')) {
+          
+          console.log('User already exists detected. Checking if we can recover...')
+          
+          // Try to sign in with the existing credentials to see if it's a confirmation issue
+          try {
+            const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+              email,
+              password
+            })
+            
+            if (signInError) {
+              console.log('Sign in failed with existing user:', signInError.message)
+              return { error: 'User already exists, please login' }
+            }
+            
+            if (signInData?.user) {
+              console.log('Existing user found, checking if custom table entry exists...')
+              
+              // Check if user exists in custom table
+              const existingCustomUser = await getUserFromCustomTable(email)
+              
+              if (existingCustomUser) {
+                console.log('User exists in both systems, returning success')
+                return { error: null, success: 'User already exists, please login' }
+              } else {
+                console.log('User exists in Supabase Auth but not in custom table. Creating custom table entry...')
+                
+                // Create the missing custom table entry
+                const customUser = await createUserInCustomTable(signInData.user, firstName, lastName)
+                
+                if (customUser) {
+                  console.log('Custom table entry created successfully')
+                  return { error: null, success: 'User setup completed, please login' }
+                } else {
+                  console.log('Failed to create custom table entry')
+                  return { error: 'User exists but profile setup failed. Please contact support.' }
+                }
+              }
+            }
+          } catch (recoveryError) {
+            console.error('Error during recovery attempt:', recoveryError)
+            return { error: 'User already exists, please login' }
+          }
+        }
+        
+        // Handle other specific error types
+        if (signUpError.code === 'weak_password') {
+          return { error: 'Password is too weak. Please use a stronger password.' }
+        }
+        
+        if (signUpError.code === 'invalid_email') {
+          return { error: 'Email address format is invalid. Please check your email address.' }
+        }
+        
+        console.error('Supabase Auth signup failed with error:', signUpError)
         return { error: signUpError.message }
       }
 
-      // If signup successful, create user in custom table with timeout
-      if (data.user) {
-        const userCreationTimeout = new Promise<never>((_, reject) => {
-          setTimeout(() => reject(new Error('User creation timeout')), 5000) // 5 second timeout
-        })
+      // Verify that we have a valid user from Supabase Auth
+      if (!data?.user) {
+        console.error('Supabase Auth signup succeeded but no user data returned')
+        return { error: 'User registration failed. Please try again.' }
+      }
+
+      console.log('Supabase Auth user created successfully:', {
+        id: data.user.id,
+        email: data.user.email,
+        confirmed: data.user.email_confirmed_at
+      })
+
+                   // If signup successful, create user in custom table with timeout
+             if (data.user) {
+               const userCreationTimeout = new Promise<never>((_, reject) => {
+                 setTimeout(() => reject(new Error('User creation timeout')), DB_TIMEOUT)
+               })
 
         try {
           console.log('Creating user in custom table...')
@@ -386,45 +535,51 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           
           if (!customUser) {
             console.error('createUserInCustomTable returned null')
+            // Note: Cannot clean up Supabase Auth user from client-side
+            // The user will need to be cleaned up manually or through a backend process
+            console.warn('Supabase Auth user created but custom table creation failed')
             return { error: 'Failed to create user profile. Please try again.' }
           }
           
           console.log('User created successfully in custom table:', customUser)
+          
+          // Verify the user was created with the correct ID
+          if (customUser.user_id !== data.user.id) {
+            console.error('User ID mismatch:', {
+              supabaseAuthId: data.user.id,
+              customTableId: customUser.user_id
+            })
+            // Clean up the custom table user since it has wrong ID
+            try {
+              await supabase.from(USER_TABLE).delete().eq('user_id', customUser.user_id)
+              console.log('Cleaned up custom table user after ID mismatch')
+            } catch (cleanupError) {
+              console.warn('Could not clean up custom table user:', cleanupError)
+            }
+            return { error: 'User profile creation failed. Please try again.' }
+          }
+          
+          console.log('✅ User registration completed successfully!')
         } catch (creationError: any) {
           console.error('Error during user creation:', creationError)
           if (creationError?.message === 'User creation timeout') {
-            console.warn('User creation took too long, continuing with basic auth')
-            // Continue with basic auth even if user creation times out
+            console.warn('User creation took too long')
+            // Note: Cannot clean up Supabase Auth user from client-side
+            return { error: 'Registration timed out. Please try again.' }
           } else {
+            // Note: Cannot clean up Supabase Auth user from client-side
             return { error: 'Failed to create user profile. Please try again.' }
           }
         }
 
-        // Automatically sign in the user with timeout
-        const timeoutPromise = new Promise<never>((_, reject) => {
-          setTimeout(() => reject(new Error('Sign-in timeout')), 5000) // Reduced to 5 seconds
-        })
-
-        const signInPromise = supabase.auth.signInWithPassword({
-          email,
-          password,
-        })
-
-        const result = await Promise.race([signInPromise, timeoutPromise])
-        const { error: signInError } = result
-
-        if (signInError) {
-          return { error: 'Registration successful but sign-in is taking too long. Please try logging in manually.' }
-        }
+        // Don't attempt automatic sign-in, just return success
+        console.log('User registered successfully, returning success message')
       }
 
-      return { error: null }
+      return { error: null, success: 'User registered, please login' }
     } catch (error: any) {
       if (error?.message === 'Signup timeout') {
         return { error: 'Registration is taking too long. Please try again.' }
-      }
-      if (error?.message === 'Sign-in timeout') {
-        return { error: 'Registration successful but sign-in is taking too long. Please try logging in manually.' }
       }
       if (error?.message === 'User creation timeout') {
         return { error: 'Registration successful but user setup is taking too long. Please try logging in manually.' }
@@ -435,12 +590,118 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const logout = async () => {
     try {
+      console.log('Logging out user...')
       await supabase.auth.signOut()
       setUser(null)
       // Clear cache on logout
       setUserCache(new Map())
+      console.log('User logged out and cache cleared')
     } catch (error) {
       console.error('Error logging out:', error)
+    }
+  }
+
+  // Function to clear stale cache entries
+  const clearStaleCache = (email?: string) => {
+    if (email) {
+      setUserCache(prev => {
+        const newCache = new Map(prev)
+        newCache.delete(email)
+        return newCache
+      })
+      console.log('Cleared cache for email:', email)
+    } else {
+      setUserCache(new Map())
+      console.log('Cleared entire user cache')
+    }
+  }
+
+  // Function to debug authentication state
+  const debugAuthState = async (email: string) => {
+    console.log('=== AUTH STATE DEBUG ===')
+    console.log('Email:', email)
+    
+    try {
+      // Check Supabase Auth session
+      const { data: { session } } = await supabase.auth.getSession()
+      console.log('Current Supabase session:', session ? 'Active' : 'None')
+      if (session?.user) {
+        console.log('Session user:', {
+          id: session.user.id,
+          email: session.user.email,
+          confirmed: session.user.email_confirmed_at
+        })
+      }
+      
+      // Check custom table
+      const customUser = await getUserFromCustomTable(email)
+      console.log('Custom table user:', customUser ? 'Found' : 'Not found')
+      if (customUser) {
+        console.log('Custom user details:', customUser)
+      }
+      
+      // Check cache
+      const cachedUser = userCache.get(email)
+      console.log('Cached user:', cachedUser ? 'Found' : 'Not found')
+      if (cachedUser) {
+        console.log('Cached user details:', cachedUser)
+      }
+      
+      console.log('=== END DEBUG ===')
+      
+      return {
+        session: !!session,
+        customUser: !!customUser,
+        cachedUser: !!cachedUser
+      }
+    } catch (error) {
+      console.error('Debug error:', error)
+      return { error: error instanceof Error ? error.message : 'Unknown error' }
+    }
+  }
+
+  // Function to check Supabase configuration
+  const checkSupabaseConfig = async () => {
+    console.log('=== SUPABASE CONFIG CHECK ===')
+    
+    try {
+      // Check if we can access Supabase
+      console.log('Supabase client available:', !!supabase)
+      console.log('Supabase auth available:', !!supabase.auth)
+      
+      // Try a simple auth operation to check configuration
+      const { data, error } = await supabase.auth.getSession()
+      
+      if (error) {
+        console.error('Supabase auth error:', error)
+        return { error: error.message }
+      }
+      
+      console.log('Supabase auth connection:', 'Working')
+      
+      // Check if we can access the database
+      try {
+        const { data: tableCheck, error: tableError } = await supabase
+          .from(USER_TABLE)
+          .select('count')
+          .limit(1)
+        
+        if (tableError) {
+          console.error('Database access error:', tableError)
+          return { error: `Database access failed: ${tableError.message}` }
+        }
+        
+        console.log('Database access:', 'Working')
+        return { success: 'Supabase configuration is working correctly' }
+        
+      } catch (dbError) {
+        console.error('Database check error:', dbError)
+        return { error: `Database check failed: ${dbError}` }
+      }
+      
+    } catch (error) {
+      console.error('Config check error:', error)
+      return { error: `Config check failed: ${error}` }
     }
   }
 
@@ -450,6 +711,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     register,
     logout,
     loading,
+    clearStaleCache,
+    debugAuthState,
+    checkSupabaseConfig,
   }
 
   return (

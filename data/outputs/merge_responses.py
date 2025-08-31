@@ -258,7 +258,7 @@ def merge_responses():
                 
                 # Calculate average evaluation score
                 if all([innovation, quality, problem_significance]):
-                    evaluation_score = round((innovation + quality + problem_significance) / 3, 2)
+                    evaluation_score = round((innovation + quality + problem_significance) / 3, 1)
                 else:
                     evaluation_score = 0
                 
@@ -317,7 +317,7 @@ def merge_responses():
                     
                     # Calculate average evaluation score
                     if all([innovation, quality, problem_significance]):
-                        evaluation_score = round((innovation + quality + problem_significance) / 3, 2)
+                        evaluation_score = round((innovation + quality + problem_significance) / 3, 1)
                     else:
                         evaluation_score = 0
                     

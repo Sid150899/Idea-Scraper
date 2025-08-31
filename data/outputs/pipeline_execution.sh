@@ -38,7 +38,7 @@ RESPONSE=$(curl -s -X POST "$API_URL/run" \
 \"user_id\": \"$USER_ID\",
 \"session_id\": \"$SESSION_ID\",
 \"new_message\": {
-\"parts\": [{\"text\": \"Run the complete idea extraction pipeline to scrape startup ideas from reddit and generate detailed analysis\"}],
+\"parts\": [{\"text\": \"Run the complete idea extraction pipeline to scrape startup ideas from reddit and generate detailed analysis. Limit the number of ideas to 20.\"}],
 \"role\": \"user\"
 }
 }")

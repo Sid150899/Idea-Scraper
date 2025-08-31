@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Login from './components/Login'
 import Home from './components/Home'
 import IdeaDetail from './components/IdeaDetail'
+import AuthDebug from './components/AuthDebug'
+
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import './App.css'
 
@@ -19,6 +21,8 @@ function App() {
         <div className="App">
           <Routes>
             <Route path="/login" element={<Login />} />
+            <Route path="/debug" element={<AuthDebug />} />
+
             <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
             <Route path="/idea/:id" element={<ProtectedRoute><IdeaDetail /></ProtectedRoute>} />
           </Routes>

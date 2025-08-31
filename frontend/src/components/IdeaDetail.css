@@ -115,26 +115,11 @@
   gap: 2px;
 }
 
-.article-header .star {
-  color: #f5f5dc;
-  font-size: 1rem;
+.star-dynamic {
+  color: var(--star-color);
 }
 
-.article-header .star.filled {
-  color: #f5f5dc;
-}
 
-/* Partial star fills for decimal ratings in header */
-.article-header .star.partial-10 { color: rgba(245, 245, 220, 0.1); }
-.article-header .star.partial-20 { color: rgba(245, 245, 220, 0.2); }
-.article-header .star.partial-30 { color: rgba(245, 245, 220, 0.3); }
-.article-header .star.partial-40 { color: rgba(245, 245, 220, 0.4); }
-.article-header .star.partial-50 { color: rgba(245, 245, 220, 0.5); }
-.article-header .star.partial-60 { color: rgba(245, 245, 220, 0.6); }
-.article-header .star.partial-70 { color: rgba(245, 245, 220, 0.7); }
-.article-header .star.partial-80 { color: rgba(245, 245, 220, 0.8); }
-.article-header .star.partial-90 { color: rgba(245, 245, 220, 0.9); }
-.article-header .star.partial-100 { color: #f5f5dc; }
 
 .score-text {
   font-weight: bold;
@@ -247,13 +232,11 @@
 
 .star {
   font-size: 1rem;
-  color: #ccc;
+  color: #e0e0e0;
   transition: color 0.2s ease;
 }
 
-.star.filled {
-  color: #000;
-}
+
 
 @media (max-width: 768px) {
   .detail-header {

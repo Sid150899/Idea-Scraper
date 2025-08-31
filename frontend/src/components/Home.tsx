@@ -236,22 +236,61 @@ const Home: React.FC = () => {
     )
   }
 
-  const renderStars = (score: number) => {
+  const renderStars = (score: number, useBeigeTheme: boolean = false) => {
+    // Handle edge cases
+    if (score < 0) score = 0
+    if (score > 10) score = 10
+    
     const stars = []
     for (let i = 1; i <= 10; i++) {
-      let starClass = ''
+      let starColor = '#e0e0e0' // Default empty star color
       
       if (i <= Math.floor(score)) {
         // Full star for complete integer parts
-        starClass = 'filled'
+        starColor = useBeigeTheme ? '#f5f5dc' : '#000'
       } else if (i === Math.ceil(score) && score % 1 > 0) {
-        // Partial star for decimal part
+        // Partial star for decimal part - round to nearest 10% increment
         const partialFill = score % 1
-        starClass = `partial-${Math.round(partialFill * 100)}`
+        const partialPercent = Math.round(partialFill * 10) * 10
+        
+        if (useBeigeTheme) {
+          // Beige theme for article header (black background)
+          if (partialPercent <= 10) starColor = '#f8f8f0'
+          else if (partialPercent <= 20) starColor = '#f0f0e8'
+          else if (partialPercent <= 30) starColor = '#e8e8e0'
+          else if (partialPercent <= 40) starColor = '#e0e0d8'
+          else if (partialPercent <= 50) starColor = '#d8d8d0'
+          else if (partialPercent <= 60) starColor = '#d0d0c8'
+          else if (partialPercent <= 70) starColor = '#c8c8c0'
+          else if (partialPercent <= 80) starColor = '#c0c0b8'
+          else if (partialPercent <= 90) starColor = '#b8b8b0'
+          else starColor = '#f5f5dc'
+        } else {
+          // Black theme for regular content (light background)
+          if (partialPercent <= 10) starColor = '#f0f0f0'
+          else if (partialPercent <= 20) starColor = '#e8e8e8'
+          else if (partialPercent <= 30) starColor = '#e0e0e0'
+          else if (partialPercent <= 40) starColor = '#d8d8d8'
+          else if (partialPercent <= 50) starColor = '#d0d0d0'
+          else if (partialPercent <= 60) starColor = '#c8c8c8'
+          else if (partialPercent <= 70) starColor = '#c0c0c0'
+          else if (partialPercent <= 80) starColor = '#b8b8b8'
+          else if (partialPercent <= 90) starColor = '#b0b0b0'
+          else starColor = '#000'
+        }
       }
       
       stars.push(
-        <span key={i} className={`star ${starClass}`}>
+        <span 
+          key={`star-${i}-${score}-${useBeigeTheme}`}
+          style={{ 
+            '--star-color': starColor,
+            display: 'inline-block',
+            fontSize: '1rem',
+            marginRight: '2px'
+          } as React.CSSProperties & { '--star-color': string }}
+          className="star-dynamic"
+        >
           ★
         </span>
       )
@@ -343,7 +382,7 @@ const Home: React.FC = () => {
                     onClick={() => toggleSaveIdea(idea.idea_id)}
                     title={savedIdeas.has(idea.idea_id) ? 'Remove from saved' : 'Save idea'}
                   >
-                    🏁
+                    {savedIdeas.has(idea.idea_id) ? 'Saved' : 'Save'}
                   </button>
                 </div>
                 
