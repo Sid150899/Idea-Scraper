@@ -60,15 +60,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         console.error('Error checking table structure:', tableCheckError)
       }
       
-      // Generate a unique integer user_id using timestamp and random component
+      // Generate a unique integer user_id using a smaller range
       let user_id: number
       let attempts = 0
-      const maxAttempts = 5
+      const maxAttempts = 10
       
       do {
-        const timestamp = Date.now()
-        const random = Math.floor(Math.random() * 1000)
-        user_id = timestamp + random
+        // Use a smaller range: current timestamp in seconds + random number
+        const timestampSeconds = Math.floor(Date.now() / 1000) // Convert to seconds
+        const random = Math.floor(Math.random() * 10000) // Random 0-9999
+        user_id = timestampSeconds + random
+        
+        // Ensure user_id is within PostgreSQL integer range (max: 2,147,483,647)
+        if (user_id > 2147483647) {
+          user_id = user_id % 2147483647 // Wrap around if too large
+        }
+        
         attempts++
         
         // Check if user_id already exists (with timeout)
@@ -110,6 +117,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         console.error('Failed to generate unique user_id after multiple attempts')
         return null
       }
+      
+      console.log('Generated user_id:', user_id, 'Type:', typeof user_id, 'Range check:', user_id <= 2147483647)
       
       const userData = {
         user_id: user_id,
