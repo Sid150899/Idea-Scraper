@@ -295,7 +295,6 @@ const Home: React.FC = () => {
           </div>
           
           <div className="header-actions">
-            <span className="sort-filter">Sort | Filter</span>
             <button className="menu-button" onClick={logout}>
               <span>Logout</span>
             </button>
@@ -327,7 +326,14 @@ const Home: React.FC = () => {
             {currentIdeas.map((idea) => (
               <div key={idea.idea_id} className="idea-card">
                 <div className="card-header">
-                  <h3 className="idea-title">{idea.title}</h3>
+                  <div className="title-date-container">
+                    <h3 className="idea-title">{idea.title}</h3>
+                    <span className="idea-date">| {new Date(idea.date_of_post).toLocaleDateString('en-GB', {
+                      day: 'numeric',
+                      month: 'long',
+                      year: 'numeric'
+                    })}</span>
+                  </div>
                   <button
                     className={`save-button ${savedIdeas.has(idea.idea_id) ? 'saved' : ''}`}
                     onClick={() => toggleSaveIdea(idea.idea_id)}
@@ -339,11 +345,10 @@ const Home: React.FC = () => {
                 
                 <p className="idea-description">{idea.content}</p>
                 
-                <div className="idea-rating">
-                  {renderStars(idea.evaluation_score)}
-                </div>
-                
                 <div className="idea-metadata">
+                  <div className="stars-container">
+                    {renderStars(idea.evaluation_score)}
+                  </div>
                   <span className="source-subreddit">{idea.source_subreddit}</span>
                   <span className="engagement">Engagement: {idea.engagement_score}</span>
                 </div>

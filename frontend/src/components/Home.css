@@ -64,9 +64,7 @@
   gap: 1rem;
 }
 
-.sort-filter {
-  font-weight: bold;
-}
+
 
 .menu-button {
   background: none;
@@ -137,13 +135,26 @@
   margin-bottom: 1rem;
 }
 
+.title-date-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  margin-right: 1rem;
+}
+
 .idea-title {
   font-size: 1.25rem;
   font-weight: bold;
   color: #000;
   margin: 0;
-  flex: 1;
-  margin-right: 1rem;
+}
+
+.idea-date {
+  font-size: 0.9rem;
+  color: #666;
+  font-weight: 500;
+  white-space: nowrap;
 }
 
 .save-button {
@@ -171,16 +182,12 @@
   margin-bottom: 1rem;
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-.idea-rating {
-  margin-bottom: 1rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2px;
-}
+
 
 .rating-container {
   display: flex;
@@ -231,12 +238,22 @@
   color: #000;
 }
 
+.stars-container {
+  display: flex;
+  gap: 2px;
+  flex: 1;
+}
+
 .source-subreddit {
   font-weight: bold;
+  text-align: center;
+  flex: 1;
 }
 
 .engagement {
   font-weight: bold;
+  text-align: right;
+  flex: 1;
 }
 
 .view-details {
