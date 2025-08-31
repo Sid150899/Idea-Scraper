@@ -19,6 +19,34 @@
   word-wrap: break-word;
   font-family: 'Arial', sans-serif;
   text-align: center;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+}
+
+.logo-palette {
+  font-weight: bold;
+  font-size: 2.5rem;
+  color: #000;
+}
+
+.logo-of {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-weight: normal;
+  font-style: italic;
+  font-size: 2rem;
+  color: #000;
+  position: relative;
+  z-index: 2;
+  transform: translateY(0.1em);
+}
+
+.logo-ideas {
+  font-weight: bold;
+  font-size: 2.5rem;
+  color: #000;
 }
 
 .form-container {
@@ -167,11 +195,29 @@
     font-size: 2rem;
     letter-spacing: 0.02em;
   }
+  
+  .logo-palette,
+  .logo-ideas {
+    font-size: 2rem;
+  }
+  
+  .logo-of {
+    font-size: 1.6rem;
+  }
 }
 
 @media (max-width: 480px) {
   .login-title {
     font-size: 1.8rem;
     letter-spacing: 0.01em;
+  }
+  
+  .logo-palette,
+  .logo-ideas {
+    font-size: 1.8rem;
+  }
+  
+  .logo-of {
+    font-size: 1.4rem;
   }
 }

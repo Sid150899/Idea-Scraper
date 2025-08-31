@@ -271,7 +271,11 @@ const Home: React.FC = () => {
   return (
     <div className="home-container">
       <header className="home-header">
-        <h1 className="home-title">PALETTE of IDEAS</h1>
+        <h1 className="home-title">
+          <span className="logo-palette">PALETTE</span>
+          <span className="logo-of">of</span>
+          <span className="logo-ideas">IDEAS</span>
+        </h1>
         
         <div className="nav-bar">
           <button

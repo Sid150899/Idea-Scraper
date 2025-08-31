@@ -42,7 +42,11 @@ const Login: React.FC = () => {
 
   return (
     <div className="login-container">
-      <h1 className="login-title">PALETTE of IDEAS</h1>
+      <h1 className="login-title">
+        <span className="logo-palette">PALETTE</span>
+        <span className="logo-of">of</span>
+        <span className="logo-ideas">IDEAS</span>
+      </h1>
       
       <div className="form-container">
         <div className="toggle-container">
