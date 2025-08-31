@@ -76,18 +76,33 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           setTimeout(() => reject(new Error('Timeout')), 3000)
         })
         
-        const checkPromise = supabase
+        let checkPromise = supabase
           .from('User')
           .select('user_id')
           .eq('user_id', user_id)
           .single()
-        
+
         try {
           const { data: existingUser } = await Promise.race([checkPromise, timeoutPromise])
           if (!existingUser) break
         } catch (error) {
-          // If timeout or error, assume user_id is available
-          break
+          // If User table fails, try user table
+          if (error && typeof error === 'object' && 'message' in error && 
+              typeof (error as any).message === 'string' && 
+              (error as any).message.includes('relation') && (error as any).message.includes('User')) {
+            console.log('Trying user ID check with lowercase table...')
+            checkPromise = supabase
+              .from('user')
+              .select('user_id')
+              .eq('user_id', user_id)
+              .single()
+            
+            const { data: existingUserLower } = await Promise.race([checkPromise, timeoutPromise])
+            if (!existingUserLower) break
+          } else {
+            // If timeout or other error, assume user_id is available
+            break
+          }
         }
       } while (attempts < maxAttempts)
       
@@ -115,13 +130,28 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       
       console.log('Attempting to insert user data:', userData)
       
-      const insertPromise = supabase
+      // Try with uppercase 'User' first, then lowercase 'user' as fallback
+      let insertPromise = supabase
         .from('User')
         .insert([userData])
         .select()
         .single()
 
-      const { data, error } = await Promise.race([insertPromise, timeoutPromise])
+      let { data, error } = await Promise.race([insertPromise, timeoutPromise])
+
+      // If uppercase fails, try lowercase
+      if (error && error.message.includes('relation') && error.message.includes('User')) {
+        console.log('Trying with lowercase table name...')
+        insertPromise = supabase
+          .from('user')
+          .insert([userData])
+          .select()
+          .single()
+
+        const result = await Promise.race([insertPromise, timeoutPromise])
+        data = result.data
+        error = result.error
+      }
 
       if (error) {
         console.error('Error creating user in custom table:', error)
