@@ -42,7 +42,7 @@ const Login: React.FC = () => {
 
   return (
     <div className="login-container">
-      <h1 className="login-title">IDEAS</h1>
+      <h1 className="login-title">PALETTE of IDEAS</h1>
       
       <div className="form-container">
         <div className="toggle-container">

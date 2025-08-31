@@ -10,11 +10,14 @@
 }
 
 .home-title {
-  font-size: 3rem;
+  font-size: 2.5rem;
   font-weight: bold;
   color: #000;
   margin-bottom: 1rem;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+  max-width: 100%;
+  word-wrap: break-word;
 }
 
 .nav-bar {
@@ -364,5 +367,20 @@
     min-width: 35px;
     padding: 0.4rem 0.8rem;
     font-size: 0.9rem;
+  }
+}
+
+/* Responsive title */
+@media (max-width: 768px) {
+  .home-title {
+    font-size: 2rem;
+    letter-spacing: 0.02em;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-title {
+    font-size: 1.8rem;
+    letter-spacing: 0.01em;
   }
 }
