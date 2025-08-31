@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Research Agent",
+  "name": "Research Agent - Palette of Ideas",
   "icons": [
     {
       "src": "favicon.ico",
@@ -20,6 +20,9 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#f5f5dc",
+  "background_color": "#f5f5dc",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "description": "A research agent for discovering and analyzing business ideas from various sources"
 }
